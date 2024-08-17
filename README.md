@@ -8,6 +8,18 @@ Mở Command Prompt (Windows) hoặc Terminal (macOS/Linux).
 Gõ lệnh sau để cài đặt PyGame:
 PowerShell or Terminal: pip install pygame
 
+Tạo thư mục Resources vào trong Game1 (có thể thay tên nếu cần, nếu thay hãy tìm dòng này:)
+
+eat_food_sound = pygame.mixer.Sound("../Game1/Resources/eat_food.mp3")
+pause_game_sound = pygame.mixer.Sound("../Game1/Resources/pause_game.mp3")
+high_score_sound = pygame.mixer.Sound("../Game1/Resources/high_score.mp3")
+invert_control_sound = pygame.mixer.Sound("../Game1/Resources/invert_control.mp3")
+game_over_sound = pygame.mixer.Sound("../Game1/Resources/game_over.mp3")
+
+# Tải nhạc nền
+pygame.mixer.music.load("../Game1/Resources/start_game.mp3")
+pygame.mixer.music.set_volume(0.5)  # Điều chỉnh âm lượng nếu cần
+
 Cuối cùng nhập 
 python Snake.py
 
@@ -25,6 +37,18 @@ Installing PyGame:
 Open the Command Prompt (Windows) or Terminal (macOS/Linux).
 Type the following command to install PyGame:
 PowerShell or Terminal: pip install pygame
+Create a Resources folder inside the Game1 directory (you can change the name if needed, and if you do, make sure to update the following lines accordingly):
+
+eat_food_sound = pygame.mixer.Sound("../Game1/Resources/eat_food.mp3")
+pause_game_sound = pygame.mixer.Sound("../Game1/Resources/pause_game.mp3")
+high_score_sound = pygame.mixer.Sound("../Game1/Resources/high_score.mp3")
+invert_control_sound = pygame.mixer.Sound("../Game1/Resources/invert_control.mp3")
+game_over_sound = pygame.mixer.Sound("../Game1/Resources/game_over.mp3")
+
+Load the background music
+pygame.mixer.music.load("../Game1/Resources/start_game.mp3")
+pygame.mixer.music.set_volume(0.5) # Adjust the volume if needed
+
 Finally, run the game by entering:
 python Snake.py
 
