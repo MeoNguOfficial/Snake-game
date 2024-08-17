@@ -19,6 +19,8 @@ LIGHT_BLUE = (153, 255, 255)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 YELLOW = (255, 255, 0)
+GRAY = (200, 200, 200)
+DARK_GRAY = (100, 100, 100)  # Màu khác cho âm thanh
 
 # Kích thước rắn, thức ăn và chướng ngại vật
 SNAKE_SIZE = 20
@@ -51,6 +53,10 @@ game_over_sound = pygame.mixer.Sound("../Game1/Resources/game_over.mp3")
 pygame.mixer.music.load("../Game1/Resources/start_game.mp3")
 pygame.mixer.music.set_volume(0.5)  # Điều chỉnh âm lượng nếu cần
 
+# Biến để lưu trữ âm lượng
+volume_music = 0.5
+volume_sound = 0.5  # Âm lượng cho âm thanh khác
+
 def new_game():
     global snake, score, food, obstacles, direction, game_started, game_paused, running, start_time, game_over_time
     global invert_control
@@ -72,7 +78,7 @@ def new_game():
 def update_music_speed(level):
     # Điều chỉnh tốc độ nhạc căn cứ vào level
     speed_factor = 1 + (0.2 * (level - 1))  # mỗi level tăng 20%
-    pygame.mixer.music.set_volume(0.5 * speed_factor)  # Tăng tốc độ âm thanh
+    pygame.mixer.music.set_volume(volume_music * speed_factor)  # Tăng tốc độ âm thanh
 
 def game_over():
     global running, game_started, game_over_time, high_scores, invert_high_scores
@@ -95,8 +101,15 @@ def game_over():
 def start_game():
     global running, start_time
     start_time = pygame.time.get_ticks()
+    pygame.mixer.music.play(-1)  # Phát nhạc nền khi bắt đầu game
 
 new_game()
+
+# Khai báo thanh trượt âm lượng
+volume_slider_x = WINDOW_WIDTH // 2 - 200  # X của thanh trượt
+slider_length = 400  # Độ dài của thanh trượt
+slider_height = 20  # Chiều cao của thanh trượt
+handle_width = 10  # Chiều rộng của điểm điều khiển thanh trượt
 
 while running:
     for event in pygame.event.get():
@@ -108,9 +121,11 @@ while running:
                 if game_paused:
                     pause_game_sound.play()  # Phát âm thanh khi tạm dừng trò chơi
                     pygame.mixer.music.pause()  # Tạm dừng nhạc nền
+                else:
+                    pygame.mixer.music.unpause()  # Phát lại nhạc nền khi thoát khỏi trạng thái tạm dừng
 
             elif event.key in [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN]:
-                if not game_started: 
+                if not game_started:
                     game_started = True
                 
                 if invert_control:
@@ -203,12 +218,14 @@ while running:
 
         snake.append(tuple(new_head))
 
+    # Vẽ nền cửa sổ
     window.fill(BLACK)
     for x in range(0, WINDOW_WIDTH, SNAKE_SIZE):
         pygame.draw.line(window, (50, 50, 50), (x, 0), (x, WINDOW_HEIGHT))
     for y in range(0, WINDOW_HEIGHT, SNAKE_SIZE):
         pygame.draw.line(window, (50, 50, 50), (0, y), (WINDOW_WIDTH, y))
 
+    # Vẽ nháy
     for segment in snake:
         pygame.draw.rect(window, GREEN, pygame.Rect(segment[0], segment[1], SNAKE_SIZE, SNAKE_SIZE))
     pygame.draw.rect(window, WHITE, pygame.Rect(food[0], food[1], FOOD_SIZE, FOOD_SIZE))
@@ -231,6 +248,40 @@ while running:
     multiplier_surface = font.render(f'Boost: x{score_multiplier[level]}', True, YELLOW)
     window.blit(multiplier_surface, (WINDOW_WIDTH - 125, 40))
 
+    if game_paused:
+        # Thanh trượt âm lượng
+        volume_slider_y = WINDOW_HEIGHT // 2 - (slider_height // 2)  # Y của thanh trượt
+        # Vẽ thanh trượt cho nhạc nền
+        pygame.draw.rect(window, GRAY, (volume_slider_x, volume_slider_y, slider_length, slider_height))
+        handle_x_music = volume_slider_x + int(volume_music * slider_length)
+        pygame.draw.rect(window, WHITE, (handle_x_music, volume_slider_y, handle_width, slider_height))
+
+        # Thanh trượt âm lượng cho âm thanh khác ở dưới
+        volume_slider_sound_y = volume_slider_y + slider_height + 10  # Y của thanh trượt âm thanh khác
+        pygame.draw.rect(window, DARK_GRAY, (volume_slider_x, volume_slider_sound_y, slider_length, slider_height))
+        handle_x_sound = volume_slider_x + int(volume_sound * slider_length)
+        pygame.draw.rect(window, WHITE, (handle_x_sound, volume_slider_sound_y, handle_width, slider_height))
+
+        # Dịch chuyển âm lượng nhạc nền khi nhấn chuột
+        mouse_buttons = pygame.mouse.get_pressed()
+        if mouse_buttons[0]:
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            if (volume_slider_x < mouse_x < volume_slider_x + slider_length and
+                    volume_slider_y < mouse_y < volume_slider_y + slider_height):
+                volume_music = (mouse_x - volume_slider_x) / slider_length
+                pygame.mixer.music.set_volume(volume_music)  # Cập nhật âm lượng nhạc nền
+
+            # Dịch chuyển âm lượng âm thanh khác khi nhấn chuột
+            if (volume_slider_x < mouse_x < volume_slider_x + slider_length and
+                    volume_slider_sound_y < mouse_y < volume_slider_sound_y + slider_height):
+                volume_sound = (mouse_x - volume_slider_x) / slider_length
+                eat_food_sound.set_volume(volume_sound)  # Cập nhật âm lượng âm thanh khác
+
+        # Hiển thị thông báo "Game paused..." ở giữa màn hình
+        pause_surface = font.render("Game paused...", True, WHITE)
+        pause_rect = pause_surface.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 - 50))
+        window.blit(pause_surface, pause_rect)
+
     if not game_started:
         if start_time and pygame.time.get_ticks() - start_time < 5000:
             start_game_surface = font.render("Press any arrow key to start!", True, WHITE)
@@ -242,11 +293,23 @@ while running:
                 game_over_surface = font.render("Game Over! Press any arrow key to restart.", True, RED)
                 game_over_rect = game_over_surface.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2))
                 window.blit(game_over_surface, game_over_rect)
-        else:
-            if game_paused:
-                pause_surface = font.render("Game paused...", True, WHITE)
-                pause_rect = pause_surface.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2))
-                window.blit(pause_surface, pause_rect)
+
+                # Hiển thị điểm số
+                score_surface = font.render(f'Score: {score}', True, WHITE)
+                score_rect = score_surface.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 + 30))
+                window.blit(score_surface, score_rect)
+
+                # Kiểm tra xem có điểm cao mới hay không
+                if invert_control:
+                    if score > invert_high_scores[level]:
+                        new_high_score_surface = font.render("New High Score!", True, YELLOW)
+                        new_high_score_rect = new_high_score_surface.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 + 60))
+                        window.blit(new_high_score_surface, new_high_score_rect)
+                else:
+                    if score > high_scores[level]:
+                        new_high_score_surface = font.render("New High Score!", True, YELLOW)
+                        new_high_score_rect = new_high_score_surface.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 + 60))
+                        window.blit(new_high_score_surface, new_high_score_rect)
 
     pygame.display.flip()
     pygame.time.Clock().tick(game_speed)
