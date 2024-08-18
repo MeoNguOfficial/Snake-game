@@ -1,63 +1,57 @@
-RanSanMoi - Snake Game
-English
-Game Description
-"RanSanMoi" is a classic snake game where the player controls a snake that grows in length as it eats food. The game becomes more challenging as the snake's speed increases with each level. The player's goal is to achieve the highest score by consuming as much food as possible without colliding with the snake's own body or the obstacles on the screen.
+# SNAKE GAME - RẮN SĂN MỒI
 
-Features
-Responsive and full-screen game window with a size of 1600x900 pixels.
-Adjustable game speed that increases with each level.
-Score multiplier that increases with each level.
-High scores tracked for each level.
-Sound effects for eating food, pausing the game, achieving a high score, and game over.
-Background music that plays throughout the game.
-Invert control mode that reverses the snake's movement direction.
-Volume control for both music and sound effects.
-How to Play
-Use the arrow keys to control the snake's movement.
-Eat the food (represented by a square) to grow the snake and increase your score.
-Avoid colliding with the snake's own body or the obstacles on the screen.
-The game speed and score multiplier increase with each level.
-Press the Escape key to pause/resume the game.
-Achieve the highest score possible.
-Technical Details
-The game is built using the Pygame library in Python. It includes the following key components:
+## Overview
+This is a simple implementation of the classic Snake game using the Pygame library in Python. Players control a growing snake that must consume food while avoiding walls and its own tail. As the game progresses, obstacles appear, and the snake's speed increases, adding to the challenge.
 
-Game window initialization and management.
-Snake and food object handling.
-Obstacle generation and collision detection.
-Score tracking and display.
-Game speed and level management.
-High score tracking and sound effect management.
-Invert control mode implementation.
-Volume control for music and sound effects.
-Tiếng Việt
-Mô tả trò chơi
-"RanSanMoi" là một trò chơi rắn cổ điển, nơi người chơi điều khiển một con rắn đang tăng độ dài khi nó ăn thức ăn. Trò chơi trở nên càng thách thức hơn khi tốc độ của rắn tăng lên ở mỗi cấp độ. Mục tiêu của người chơi là đạt được điểm số cao nhất bằng cách tiêu thụ càng nhiều thức ăn càng tốt mà không va chạm với thân của chính con rắn hoặc các chướng ngại vật trên màn hình.
+## Features
+- **Fixed Window Size**: The game runs in a window of 1600x900 pixels.
+- **Dynamic Levels**: Players can choose levels from 1 to 10, each increasing the game speed.
+- **Invert Control**: Players can toggle inverted control for an additional challenge.
+- **Sound Effects**: The game includes sounds for eating food, pausing, game over, and achieving high scores.
+- **High Score Tracking**: The game tracks high scores for each level.
 
-Tính năng
-Cửa sổ trò chơi độ phân giải cao và toàn màn hình với kích thước 1600x900 pixel.
-Tốc độ game có thể điều chỉnh và tăng dần theo mỗi cấp độ.
-Hệ số nhân điểm tăng theo mỗi cấp độ.
-Theo dõi điểm cao cho mỗi cấp độ.
-Hiệu ứng âm thanh khi ăn thức ăn, tạm dừng trò chơi, đạt điểm cao và kết thúc trò chơi.
-Nhạc nền phát suốt trong trò chơi.
-Chế độ điều khiển ngược, đảo ngược hướng di chuyển của con rắn.
-Điều chỉnh âm lượng cho cả nhạc nền và hiệu ứng âm thanh.
-Cách chơi
-Sử dụng các phím mũi tên để điều khiển di chuyển của con rắn.
-Ăn thức ăn (biểu diễn dưới dạng một ô vuông) để tăng độ dài của rắn và điểm số.
-Tránh va chạm với thân của chính con rắn hoặc các chướng ngại vật trên màn hình.
-Tốc độ game và hệ số nhân điểm tăng dần ở mỗi cấp độ.
-Bấm phím Esc để tạm dừng/tiếp tục trò chơi.
-Đạt được điểm số cao nhất có thể.
-Thông tin kỹ thuật
-Trò chơi được xây dựng bằng thư viện Pygame trong Python. Nó bao gồm các thành phần chính sau:
+## Requirements
+To run the game, make sure you have:
+- Python installed (preferably version 3.6 or higher).
+- Pygame library installed. You can install it via pip:
+  ```bash
+  pip install pygame
+  ```
 
-Khởi tạo và quản lý cửa sổ trò chơi.
-Xử lý đối tượng rắn và thức ăn.
-Tạo ra và phát hiện va chạm với chướng ngại vật.
-Theo dõi và hiển thị điểm số.
-Quản lý tốc độ game và cấp độ.
-Theo dõi điểm cao và quản lý hiệu ứng âm thanh.
-Triển khai chế độ điều khiển ngược.
-Điều chỉnh âm lượng cho nhạc nền và hiệu ứng âm thanh.
+## Game Controls
+- **Arrow Keys**: Control the direction of the snake.
+- **Space Bar**: Toggle inverted control.
+- **Number Keys (0-9)**: Choose the game level (0 for level 10).
+- **Escape Key**: Pause/Unpause the game.
+
+## Installation
+1. Clone the repository or download the code file to your machine.
+2. Ensure that the audio files are located as specified in the code (or modify the paths accordingly):
+   ```
+   ../Game1/Resources/eat_food.mp3
+   ../Game1/Resources/pause_game.mp3
+   ../Game1/Resources/high_score.mp3
+   ../Game1/Resources/invert_control.mp3
+   ../Game1/Resources/game_over.mp3
+   ../Game1/Resources/start_game.mp3
+   ```
+3. Run the game by executing the Python file:
+   ```bash
+   python snake_game.py
+   ```
+
+## Gameplay Mechanics
+- **Snake Movement**: The snake moves continuously in the last direction specified by the player. It grows in length each time it eats food.
+- **Scoring**: Players gain points based on the current level; the higher the level, the more points are awarded for each food item consumed.
+- **Obstacles**: As players gather points, the game randomly generates obstacles that the snake must avoid.
+- **Game Over**: The game ends if the snake runs into the walls, itself, or an obstacle. Players can restart the game by pressing the arrow keys after a game over.
+
+## Volume Control
+While the game is paused, players can adjust the music and sound effect volumes using sliders with the mouse cursor.
+
+## Conclusion
+Enjoy the challenge of the Snake game and try to beat your high score! Happy gaming!
+
+---
+
+If you have any questions, feel free to contact the developer or contribute to the project.
