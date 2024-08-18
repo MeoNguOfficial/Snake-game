@@ -29,18 +29,19 @@ OBSTACLE_SIZE = SNAKE_SIZE
 
 # Tốc độ rắn
 SNAKE_SPEED = SNAKE_SIZE
-game_speed = 10  # Mặc định tốc độ game
+base_game_speed = 10  # Tốc độ ban đầu
+game_speed = base_game_speed  # Mặc định tốc độ game
 level = 1  # Cấp độ ban đầu
 
 # Hệ số điểm tương ứng với mỗi cấp độ
-score_multiplier = {1: 1, 2: 2, 3: 3, 4: 4, 5: 5}
+score_multiplier = {i: i for i in range(1, 11)}  # Cập nhật cho các cấp độ từ 1 đến 10
 
 # Khởi tạo font chữ để hiển thị điểm số
 font = pygame.font.SysFont(None, 35)
 
-# Khởi tạo high scores cho từng level
-high_scores = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
-invert_high_scores = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}  # High score cho Invert Control
+# Khởi tạo high scores cho từng level (cấp độ từ 1 đến 10)
+high_scores = {i: 0 for i in range(1, 11)}
+invert_high_scores = {i: 0 for i in range(1, 11)}  # High score cho Invert Control
 
 # Tải âm thanh
 eat_food_sound = pygame.mixer.Sound("../Game1/Resources/eat_food.mp3")
@@ -151,7 +152,8 @@ while running:
                     new_game()
                     start_game()
 
-            elif event.key in [pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5]:
+            elif event.key in [pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, 
+                                pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9, pygame.K_0]:  # thêm phím số cho cấp độ 6-10
                 new_game()
                 score = 0
                 if event.key == pygame.K_1:
@@ -169,7 +171,22 @@ while running:
                 elif event.key == pygame.K_5:
                     game_speed = 50
                     level = 5
-                
+                elif event.key == pygame.K_6:
+                    game_speed = 60
+                    level = 6
+                elif event.key == pygame.K_7:
+                    game_speed = 70
+                    level = 7
+                elif event.key == pygame.K_8:
+                    game_speed = 80
+                    level = 8
+                elif event.key == pygame.K_9:
+                    game_speed = 90
+                    level = 9
+                elif event.key == pygame.K_0:  # Sử dụng phím 0 cho cấp độ 10
+                    game_speed = 100
+                    level = 10
+
                 update_music_speed(level)  # Cập nhật tốc độ nhạc theo cấp độ
 
             elif event.key == pygame.K_SPACE:
