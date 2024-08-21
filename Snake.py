@@ -58,14 +58,33 @@ pygame.mixer.music.set_volume(0.5)  # Điều chỉnh âm lượng nếu cần
 volume_music = 0.5
 volume_sound = 0.5  # Âm lượng cho âm thanh khác
 
+def check_collision(position, snake):
+    """Kiểm tra xem vị trí có chồng lên bất kỳ bộ phận nào của rắn hay không."""
+    return tuple(position) in snake
+
+def spawn_food(snake):
+    """Spawn food tại một vị trí không chồng lên cơ thể rắn."""
+    while True:
+        food_position = (random.randint(0, (WINDOW_WIDTH - FOOD_SIZE) // FOOD_SIZE) * FOOD_SIZE,
+                         random.randint(0, (WINDOW_HEIGHT - FOOD_SIZE) // FOOD_SIZE) * FOOD_SIZE)
+        if not check_collision(food_position, snake):
+            return food_position
+
+def spawn_obstacle(snake, food, obstacles):
+    """Spawn obstacle tại một vị trí không chồng lên cơ thể rắn hoặc food."""
+    while True:
+        obstacle_position = (random.randint(0, (WINDOW_WIDTH - OBSTACLE_SIZE) // OBSTACLE_SIZE) * OBSTACLE_SIZE,
+                             random.randint(0, (WINDOW_HEIGHT - OBSTACLE_SIZE) // OBSTACLE_SIZE) * OBSTACLE_SIZE)
+        if not check_collision(obstacle_position, snake) and obstacle_position != food and obstacle_position not in obstacles:
+            return obstacle_position
+
 def new_game():
     global snake, score, food, obstacles, direction, game_started, game_paused, running, start_time, game_over_time
     global invert_control
     snake = [(WINDOW_WIDTH // 2 // SNAKE_SIZE * SNAKE_SIZE,
                WINDOW_HEIGHT // 2 // SNAKE_SIZE * SNAKE_SIZE)]
     score = 0
-    food = (random.randint(0, (WINDOW_WIDTH - FOOD_SIZE) // FOOD_SIZE) * FOOD_SIZE,
-            random.randint(0, (WINDOW_HEIGHT - FOOD_SIZE) // FOOD_SIZE) * FOOD_SIZE)
+    food = spawn_food(snake)
     obstacles = []
     direction = "right"
     game_started = False
@@ -218,18 +237,14 @@ while running:
 
         if (new_head[0] >= food[0] and new_head[0] < food[0] + FOOD_SIZE and
             new_head[1] >= food[1] and new_head[1] < food[1] + FOOD_SIZE):
-            food = (random.randint(0, (WINDOW_WIDTH - FOOD_SIZE) // FOOD_SIZE) * FOOD_SIZE,
-                    random.randint(0, (WINDOW_HEIGHT - FOOD_SIZE) // FOOD_SIZE) * FOOD_SIZE)
+            food = spawn_food(snake)  # Spawn food mới
             score += score_multiplier[level]
             eat_food_sound.play()  # Phát âm thanh khi ăn thức ăn
 
             if score % 1 == 0:
-                while True:
-                    new_obstacle = (random.randint(0, (WINDOW_WIDTH - OBSTACLE_SIZE) // OBSTACLE_SIZE) * OBSTACLE_SIZE,
-                                    random.randint(0, (WINDOW_HEIGHT - OBSTACLE_SIZE) // OBSTACLE_SIZE) * OBSTACLE_SIZE)
-                    if new_obstacle not in snake and new_obstacle != food and new_obstacle not in obstacles:
-                        obstacles.append(new_obstacle)
-                        break
+                new_obstacle = spawn_obstacle(snake, food, obstacles)  # Spawn obstacle mới
+                obstacles.append(new_obstacle)
+
         else:
             snake.pop(0)
 
@@ -237,11 +252,7 @@ while running:
 
     # Vẽ nền cửa sổ
     window.fill(BLACK)
-    for x in range(0, WINDOW_WIDTH, SNAKE_SIZE):
-        pygame.draw.line(window, (50, 50, 50), (x, 0), (x, WINDOW_HEIGHT))
-    for y in range(0, WINDOW_HEIGHT, SNAKE_SIZE):
-        pygame.draw.line(window, (50, 50, 50), (0, y), (WINDOW_WIDTH, y))
-
+    
     # Vẽ nháy
     for segment in snake:
         pygame.draw.rect(window, GREEN, pygame.Rect(segment[0], segment[1], SNAKE_SIZE, SNAKE_SIZE))
