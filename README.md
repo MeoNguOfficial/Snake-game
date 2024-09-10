@@ -54,4 +54,4 @@ Enjoy the challenge of the Snake game and try to beat your high score! Happy gam
 
 ---
 
-If you have any questions, feel free to contact the developer or contribute to the project.
+If you have any questions or bug detected, feel free to contact the developer or contribute to the project.
