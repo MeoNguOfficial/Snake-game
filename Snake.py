@@ -306,7 +306,7 @@ while running:
                 eat_food_sound.set_volume(volume_sound)  # Cập nhật âm lượng âm thanh khác
 
         # Hiển thị thông báo "Game paused..." ở giữa màn hình
-        pause_surface = font.render("GAME PAUSED...", True, WHITE)
+        pause_surface = font.render("Game paused...", True, WHITE)
         pause_rect = pause_surface.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2 - 50))
         window.blit(pause_surface, pause_rect)
 
